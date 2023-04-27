@@ -50,6 +50,7 @@ public class CustomCameraView extends AppCompatActivity {
     private static final String TAG = "Android Custom Camera";
     private Button captureImageButton;
     private TextureView textureView;
+    private int fileNumber;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -64,7 +65,6 @@ public class CustomCameraView extends AppCompatActivity {
     private Size imageDimension;
     private ImageReader imageReader;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
-    private boolean mFlashSupported;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
     @Override
@@ -73,6 +73,11 @@ public class CustomCameraView extends AppCompatActivity {
         setContentView(R.layout.activity_android_camera_api);
         textureView = (TextureView) findViewById(R.id.texture);
         assert textureView != null;
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            fileNumber= extras.getInt("File_Number");
+        }
+
         textureView.setSurfaceTextureListener(textureListener);
         captureImageButton = (Button) findViewById(R.id.btn_takepicture);
         assert captureImageButton != null;
@@ -141,9 +146,9 @@ public class CustomCameraView extends AppCompatActivity {
         }
     }
 
-    private File createImageFile(String imagePath) {
+    private File createImageFile(String imagePath, int fileNumber) {
 
-        File file = new File(imagePath, "IMG_" + ".jpg");
+        File file = new File(imagePath, "IMG_" + fileNumber + ".jpg");
         return file;
     }
     protected void takePicture() {
@@ -177,8 +182,15 @@ public class CustomCameraView extends AppCompatActivity {
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            String IMAGE_PATH = Environment.getExternalStorageDirectory().getPath() + "/capturedImage";
-            final File file = createImageFile(IMAGE_PATH);//new File(Environment.getExternalStorageDirectory()+"/pic.jpg");
+            //String IMAGE_PATH = Environment.getExternalStorageDirectory().getPath() + "/capturedImage";
+
+            File imagesFolder = new File(Environment.getExternalStorageDirectory(), ".capturedImage");
+            if(!imagesFolder.exists())
+                imagesFolder.mkdirs();
+
+            String IMAGE_PATH = imagesFolder.getAbsolutePath();
+            final File directoryFile = createImageFile(IMAGE_PATH, fileNumber);
+
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -202,7 +214,7 @@ public class CustomCameraView extends AppCompatActivity {
                 private void save(byte[] bytes) throws IOException {
                     OutputStream output = null;
                     try {
-                        output = new FileOutputStream(file);
+                        output = new FileOutputStream(directoryFile);
                         output.write(bytes);
                     } finally {
                         if (null != output) {
@@ -216,10 +228,10 @@ public class CustomCameraView extends AppCompatActivity {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(CustomCameraView.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CustomCameraView.this, "Saved:" + directoryFile, Toast.LENGTH_SHORT).show();
                     createCameraPreview();
                     Intent intent = new Intent();
-                    intent.putExtra("File_Name", file.toString());
+                    intent.putExtra("File_Name", directoryFile.toString());
                     setResult(RESULT_OK, intent);
                     finish();
                 }

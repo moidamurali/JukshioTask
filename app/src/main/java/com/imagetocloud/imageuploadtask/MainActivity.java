@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 200;
     private List<String> fileNames = new ArrayList<>();
     boolean isFirstImage = false;
+    int fileNumber = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
                 uploadImage(ref);
+                binding.fileOnePath.setVisibility(View.GONE);
+                binding.fileTowPath.setVisibility(View.GONE);
             }
         });
 
@@ -82,7 +87,9 @@ public class MainActivity extends AppCompatActivity {
         binding.downloadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fileDownload();
+                binding.fileOnePath.setVisibility(View.VISIBLE);
+                binding.fileTowPath.setVisibility(View.VISIBLE);
+                downloadImagesfromCloud();
             }
         });
 
@@ -92,23 +99,37 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Method for to download image from cloud
      */
-    private void fileDownload() {
+    private void downloadImagesfromCloud() {
         StorageReference gsReference = storage.getReferenceFromUrl("gs://imagetask-82ca9.appspot.com");
         // Create a reference with an initial file path and name
-        StorageReference pathReference = gsReference.child( fileNames.get(0));
+        for(int i =0 ;i<fileNames.size(); i++) {
+            StorageReference pathReference = gsReference.child(fileNames.get(i));
+            int itemNumber = i;
 
-        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                // Got the download URL for 'users/me/profile.png'
-                Log.v("Downloaded File URL:::::" , " "+ uri.toString());
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Log.v("Downloaded File URL:::::" , " "+ exception);
-            }
-        });
+            Log.v("Downloaded File URL:::::" , " "+ pathReference.getDownloadUrl());
+            pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    // Got the download URL for 'users/me/profile.png'
+                    Log.v("Downloaded File URL:::::", " " + uri.toString());
+                    ImageView imageView;
+                    if(itemNumber==0){
+                        imageView = binding.capturedImageOne;
+                    }else{
+                        imageView = binding.capturedImageTwo;
+                    }
+
+                    Glide.with(getApplicationContext())
+                            .load(fileNames.get(itemNumber))
+                            .into(imageView);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.v("Downloaded File URL:::::", " " + exception);
+                }
+            });
+        }
 
     }
 
@@ -124,9 +145,16 @@ public class MainActivity extends AppCompatActivity {
 
             for(int i=0; i<fileNames.size(); i++) {
 
+                int finalI = i;
                 ref.putFile(Uri.parse(fileNames.get(i)))
                         .addOnSuccessListener(taskSnapshot -> {
+                            Log.v("Upload File URL:::::" , " "+ taskSnapshot.toString());
                             progressDialog.dismiss();
+                            if(finalI ==fileNames.size()-1){
+                                binding.capturedImageTwo.setImageBitmap(null);
+                            }else{
+                                binding.capturedImageOne.setImageBitmap(null);
+                            }
                             Toast.makeText(MainActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
                         })
                         .addOnFailureListener(e -> {
@@ -154,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 if(!isFirstImage) {
                     binding.capturedImageOne.setImageBitmap(bitmap);
                     isFirstImage = true;
+                    fileNumber = 2;
                 }else{
                     binding.capturedImageTwo.setImageBitmap(bitmap);
                 }
@@ -164,7 +193,14 @@ public class MainActivity extends AppCompatActivity {
             // get String data from Intent
             String returnString = data.getStringExtra("File_Name");
             //Bitmap selectedImage = BitmapFactory.decodeFile(returnString);
-            //Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+            Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+            if(!isFirstImage) {
+                binding.capturedImageOne.setImageBitmap(selectedImage);
+                isFirstImage = true;
+                fileNumber = 2;
+            }else{
+                binding.capturedImageTwo.setImageBitmap(selectedImage);
+            }
             File sharedFile = new File(returnString);
            // fileNames.add(filePath.toString());
             //Uri sharedFileUri = FileProvider.getUriForFile(this,  "com.imagetocloud.imageuploadtask.provider", sharedFile);
@@ -249,6 +285,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // Start the SecondActivity
                     Intent intent = new Intent(MainActivity.this, CustomCameraView.class);
+                    intent.putExtra("File_Number", fileNumber);
                     startActivityForResult(intent, RESULT_REQUEST_CODE);
                 }
                 else if(optionsMenu[i].equals("Choose from Gallery")){

@@ -25,6 +25,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_tv" />
 
+ <TextView
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintEnd_toEndOf="parent"
+     android:layout_marginTop="15dp"
+     android:id="@+id/file_one_path"
+     app:layout_constraintTop_toBottomOf="@+id/captured_image_one"/>
+
+ <TextView
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintEnd_toEndOf="parent"
+     android:layout_marginTop="15dp"
+     android:id="@+id/file_tow_path"
+     app:layout_constraintTop_toBottomOf="@+id/file_one_path"/>
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/captured_image_two"
         android:layout_width="match_parent"
