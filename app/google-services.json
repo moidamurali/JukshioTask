@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "693911854208",
+    "project_id": "imagetask-82ca9",
+    "storage_bucket": "imagetask-82ca9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:693911854208:android:62519cd632baa1d4b55a65",
+        "android_client_info": {
+          "package_name": "com.imagetocloud.imageuploadtask"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "693911854208-n7v6di02hhuv7qu85vb610cn1t90bt21.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVSemK13vdSIJC6QeN_OZvXB0i_3rXKVE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "693911854208-n7v6di02hhuv7qu85vb610cn1t90bt21.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
