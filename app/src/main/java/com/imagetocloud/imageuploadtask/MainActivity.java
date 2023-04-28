@@ -77,10 +77,14 @@ public class MainActivity extends AppCompatActivity {
         binding.uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
-                uploadImage(ref);
-                binding.fileOnePath.setVisibility(View.GONE);
-                binding.fileTowPath.setVisibility(View.GONE);
+                if(binding.capturedImageOne.getDrawable()!=null && binding.capturedImageOne.getDrawable()!=null ) {
+                    StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+                    uploadImage(ref);
+                    binding.fileOnePath.setVisibility(View.GONE);
+                    binding.fileTowPath.setVisibility(View.GONE);
+                }else{
+                    Toast.makeText(MainActivity.this, "Please select images to upload", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -104,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         StorageReference gsReference = storage.getReferenceFromUrl("gs://imagetask-82ca9.appspot.com");
         // Create a reference with an initial file path and name
         for(int i = 0; i< downloadFilesList.size(); i++) {
-            StorageReference pathReference = gsReference.child(downloadFilesList.get(i));
+            StorageReference pathReference = gsReference.child("/images/"+downloadFilesList.get(i));
             int itemNumber = i;
 
             Log.v("Download URL:::::" , " "+ pathReference.getName());
@@ -121,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     Glide.with(getApplicationContext())
-                            .load(downloadFilesList.get(itemNumber))
+                            .load(uri)
                             .into(imageView);
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -296,5 +300,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         builder.show();
+        builder.setCancelable(false);
     }
 }
