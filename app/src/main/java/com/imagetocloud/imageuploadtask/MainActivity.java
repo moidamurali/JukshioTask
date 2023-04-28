@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int RESULT_REQUEST_CODE = 11;
     private static final int PERMISSION_REQUEST_CODE = 200;
-    private List<String> fileNames = new ArrayList<>();
+    private List<String> uploadFilesList = new ArrayList<>();
+    private List<String> downloadFilesList = new ArrayList<>();
     boolean isFirstImage = false;
     int fileNumber = 1;
 
@@ -102,11 +103,11 @@ public class MainActivity extends AppCompatActivity {
     private void downloadImagesfromCloud() {
         StorageReference gsReference = storage.getReferenceFromUrl("gs://imagetask-82ca9.appspot.com");
         // Create a reference with an initial file path and name
-        for(int i =0 ;i<fileNames.size(); i++) {
-            StorageReference pathReference = gsReference.child(fileNames.get(i));
+        for(int i = 0; i< downloadFilesList.size(); i++) {
+            StorageReference pathReference = gsReference.child(downloadFilesList.get(i));
             int itemNumber = i;
 
-            Log.v("Downloaded File URL:::::" , " "+ pathReference.getDownloadUrl());
+            Log.v("Download URL:::::" , " "+ pathReference.getName());
             pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
@@ -120,13 +121,13 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     Glide.with(getApplicationContext())
-                            .load(fileNames.get(itemNumber))
+                            .load(downloadFilesList.get(itemNumber))
                             .into(imageView);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-                    Log.v("Downloaded File URL:::::", " " + exception);
+                    Log.v("Exception:::::", " " + exception);
                 }
             });
         }
@@ -138,19 +139,19 @@ public class MainActivity extends AppCompatActivity {
      * @param ref
      */
     private void uploadImage(StorageReference ref) {
-        if (fileNames != null) {
+        if (uploadFilesList != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            for(int i=0; i<fileNames.size(); i++) {
-
+            for(int i = 0; i< uploadFilesList.size(); i++) {
                 int finalI = i;
-                ref.putFile(Uri.parse(fileNames.get(i)))
+                ref.putFile(Uri.parse(uploadFilesList.get(i)))
                         .addOnSuccessListener(taskSnapshot -> {
-                            Log.v("Upload File URL:::::" , " "+ taskSnapshot.toString());
+                            Log.v("Upload File URL:::::" , " "+ taskSnapshot.toString() + "::::: "+ ref.getName());
+                            downloadFilesList.add(ref.getName());
                             progressDialog.dismiss();
-                            if(finalI ==fileNames.size()-1){
+                            if(finalI == uploadFilesList.size()-1){
                                 binding.capturedImageTwo.setImageBitmap(null);
                             }else{
                                 binding.capturedImageOne.setImageBitmap(null);
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             filePath = data.getData();
-            fileNames.add(filePath.toString());
+            uploadFilesList.add(filePath.toString());
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 if(!isFirstImage) {
