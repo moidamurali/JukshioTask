@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
                     uploadImage(ref);
                     binding.fileOnePath.setVisibility(View.GONE);
-                    binding.fileTowPath.setVisibility(View.GONE);
+                    binding.fileTwoPath.setVisibility(View.GONE);
                 }else{
                     Toast.makeText(MainActivity.this, "Please select images to upload", Toast.LENGTH_LONG).show();
                 }
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 binding.fileOnePath.setVisibility(View.VISIBLE);
-                binding.fileTowPath.setVisibility(View.VISIBLE);
+                binding.fileTwoPath.setVisibility(View.VISIBLE);
                 downloadImagesfromCloud();
             }
         });
@@ -119,8 +119,10 @@ public class MainActivity extends AppCompatActivity {
                     Log.v("Downloaded File URL:::::", " " + uri.toString());
                     ImageView imageView;
                     if(itemNumber==0){
+                        binding.fileOnePath.setText(uri.toString());
                         imageView = binding.capturedImageOne;
                     }else{
+                        binding.fileTwoPath.setText(uri.toString());
                         imageView = binding.capturedImageTwo;
                     }
 

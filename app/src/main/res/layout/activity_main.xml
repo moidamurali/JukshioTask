@@ -7,56 +7,59 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-   <TextView
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:text="Select Imags to Upload to Cloud"
-       app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintEnd_toEndOf="parent"
-       android:layout_marginTop="15dp"
-       android:id="@+id/title_tv"
-       app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+        android:id="@+id/title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_15"
+        android:text="@string/title_image_selection"
+        android:textSize="@dimen/text_size_18"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/captured_image_one"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintHeight_percent="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_tv" />
 
- <TextView
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     app:layout_constraintStart_toStartOf="parent"
-     app:layout_constraintEnd_toEndOf="parent"
-     android:layout_marginTop="15dp"
-     android:id="@+id/file_one_path"
-     app:layout_constraintTop_toBottomOf="@+id/captured_image_one"/>
+    <TextView
+        android:id="@+id/file_one_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/captured_image_one" />
 
- <TextView
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     app:layout_constraintStart_toStartOf="parent"
-     app:layout_constraintEnd_toEndOf="parent"
-     android:layout_marginTop="15dp"
-     android:id="@+id/file_tow_path"
-     app:layout_constraintTop_toBottomOf="@+id/file_one_path"/>
+    <TextView
+        android:id="@+id/file_two_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/file_one_path" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/captured_image_two"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.5"
+        android:layout_marginTop="10dp"
+        app:layout_constraintHeight_percent="0.4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/captured_image_one" />
+        app:layout_constraintTop_toBottomOf="@id/file_two_path" />
 
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/upload_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Upload Image"
+        android:text="@string/upload_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -64,7 +67,8 @@
         android:id="@+id/download_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Download Image"
+        android:text="@string/download_image"
+        android:layout_marginLeft="@dimen/margin_15"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -74,8 +78,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="@dimen/margin_16"
+        android:layout_marginBottom="@dimen/margin_16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_camera" />

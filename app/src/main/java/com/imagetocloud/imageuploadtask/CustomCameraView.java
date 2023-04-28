@@ -185,8 +185,8 @@ public class CustomCameraView extends AppCompatActivity {
             //String IMAGE_PATH = Environment.getExternalStorageDirectory().getPath() + "/capturedImage";
 
             File imagesFolder = new File(Environment.getExternalStorageDirectory(), ".capturedImage");
-            if(!imagesFolder.exists())
-                imagesFolder.mkdirs();
+           /* if(!imagesFolder.exists())
+                imagesFolder.mkdirs();*/
 
             String IMAGE_PATH = imagesFolder.getAbsolutePath();
             final File directoryFile = createImageFile(IMAGE_PATH, fileNumber);

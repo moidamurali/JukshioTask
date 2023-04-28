@@ -43,4 +43,7 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="title_image_selection">Select camera icon for image selection</string>
+    <string name="upload_image">Upload Images</string>
+    <string name="download_image">Download Images</string>
 </resources>
